@@ -33,8 +33,8 @@ export const reminderOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all reminders',
-				action: 'Get all reminders',
+				description: 'Retrieve many reminders',
+				action: 'Get many reminders',
 			},
 			{
 				name: 'Update',

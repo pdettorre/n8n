@@ -33,8 +33,8 @@ export const caseOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all cases',
-				action: 'Get all cases',
+				description: 'Retrieve many cases',
+				action: 'Get many cases',
 			},
 			{
 				name: 'Get Status',

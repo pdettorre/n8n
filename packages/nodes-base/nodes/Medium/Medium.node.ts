@@ -312,8 +312,8 @@ export class Medium implements INodeType {
 					{
 						name: 'Get Many',
 						value: 'getAll',
-						description: 'Get all publications',
-						action: 'Get all publications',
+						description: 'Get many publications',
+						action: 'Get many publications',
 					},
 				],
 				default: 'publication',

@@ -21,8 +21,8 @@ export const sequenceOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all sequences',
-				action: 'Get all sequences',
+				description: 'Get many sequences',
+				action: 'Get many sequences',
 			},
 			{
 				name: 'Get Subscriptions',

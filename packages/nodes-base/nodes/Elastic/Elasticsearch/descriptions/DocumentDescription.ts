@@ -35,8 +35,8 @@ export const documentOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all documents',
-				action: 'Get all documents',
+				description: 'Get many documents',
+				action: 'Get many documents',
 			},
 			{
 				name: 'Update',

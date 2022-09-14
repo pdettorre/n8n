@@ -17,8 +17,8 @@ export const postCommentOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all comments in a post',
-				action: 'Get all comments in a post',
+				description: 'Retrieve many comments in a post',
+				action: 'Get many comments in a post',
 			},
 			{
 				name: 'Delete',

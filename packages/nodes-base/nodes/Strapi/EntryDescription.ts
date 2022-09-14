@@ -33,8 +33,8 @@ export const entryOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all entries',
-				action: 'Get all entries',
+				description: 'Get many entries',
+				action: 'Get many entries',
 			},
 			{
 				name: 'Update',

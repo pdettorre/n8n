@@ -21,8 +21,8 @@ export const postOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all posts',
-				action: 'Get all posts',
+				description: 'Get many posts',
+				action: 'Get many posts',
 			},
 			{
 				name: 'Delete',

@@ -27,8 +27,8 @@ export const caseCommentOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all case comments',
-				action: 'Get all case comments',
+				description: 'Retrieve many case comments',
+				action: 'Get many case comments',
 			},
 			{
 				name: 'Remove',

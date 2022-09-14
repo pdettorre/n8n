@@ -36,8 +36,8 @@ export const attachmentOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Returns all attachments for the card',
-				action: 'Get all attachments',
+				description: 'Returns many attachments for the card',
+				action: 'Get many attachments',
 			},
 		],
 		default: 'getAll',

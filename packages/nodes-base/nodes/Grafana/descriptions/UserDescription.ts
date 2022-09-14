@@ -21,8 +21,8 @@ export const userOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all users in the current organization',
-				action: 'Get all users',
+				description: 'Retrieve many users in the current organization',
+				action: 'Get many users',
 			},
 			{
 				name: 'Update',

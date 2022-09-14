@@ -93,8 +93,8 @@ export class AwsSes implements INodeType {
 						name: 'Get Many',
 						value: 'getAll',
 						description:
-							'Get all the existing custom verification email templates for your account',
-						action: 'Get all custom verifications',
+							'Get many of the existing custom verification email templates for your account',
+						action: 'Get many custom verifications',
 					},
 					{
 						name: 'Send',
@@ -649,8 +649,8 @@ export class AwsSes implements INodeType {
 					{
 						name: 'Get Many',
 						value: 'getAll',
-						description: 'Get all templates',
-						action: 'Get all templates',
+						description: 'Get many templates',
+						action: 'Get many templates',
 					},
 					{
 						name: 'Update',

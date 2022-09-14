@@ -28,14 +28,14 @@ export const metricsOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all the metrics',
+				description: 'Get many metrics',
 				routing: {
 					request: {
 						method: 'GET',
 						url: '/api/metric/',
 					},
 				},
-				action: 'Get all metrics',
+				action: 'Get many metrics',
 			},
 		],
 		default: 'getAll',

@@ -27,8 +27,8 @@ export const submissionOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all submissions',
-				action: 'Get all submissions',
+				description: 'Get many submissions',
+				action: 'Get many submissions',
 			},
 			{
 				name: 'Get Validation Status',

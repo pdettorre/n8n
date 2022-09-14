@@ -27,8 +27,8 @@ export const issueAttachmentOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all attachments',
-				action: 'Get all issue attachments',
+				description: 'Get many attachments',
+				action: 'Get many issue attachments',
 			},
 			{
 				name: 'Remove',

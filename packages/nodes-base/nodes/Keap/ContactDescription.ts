@@ -34,8 +34,8 @@ export const contactOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all contacts',
-				action: 'Get all contacts',
+				description: 'Retrieve many contacts',
+				action: 'Get many contacts',
 			},
 		],
 		default: 'upsert',

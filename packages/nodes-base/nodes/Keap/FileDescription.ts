@@ -21,8 +21,8 @@ export const fileOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all files',
-				action: 'Get all files',
+				description: 'Retrieve many files',
+				action: 'Get many files',
 			},
 			{
 				name: 'Upload',

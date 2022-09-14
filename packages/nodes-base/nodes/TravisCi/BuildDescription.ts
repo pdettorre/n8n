@@ -27,8 +27,8 @@ export const buildOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all builds',
-				action: 'Get all builds',
+				description: 'Get many builds',
+				action: 'Get many builds',
 			},
 			{
 				name: 'Restart',

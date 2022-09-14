@@ -145,8 +145,8 @@ export class Asana implements INodeType {
 					{
 						name: 'Get Many',
 						value: 'getAll',
-						description: 'Get all substasks',
-						action: 'Get all subtasks',
+						description: 'Get many substasks',
+						action: 'Get many subtasks',
 					},
 				],
 				default: 'create',
@@ -393,8 +393,8 @@ export class Asana implements INodeType {
 					{
 						name: 'Get Many',
 						value: 'getAll',
-						description: 'Get all tasks',
-						action: 'Get all tasks',
+						description: 'Get many tasks',
+						action: 'Get many tasks',
 					},
 					{
 						name: 'Move',
@@ -1272,8 +1272,8 @@ export class Asana implements INodeType {
 					{
 						name: 'Get Many',
 						value: 'getAll',
-						description: 'Get all users',
-						action: 'Get all users',
+						description: 'Get many users',
+						action: 'Get many users',
 					},
 				],
 				default: 'get',
@@ -1357,8 +1357,8 @@ export class Asana implements INodeType {
 					{
 						name: 'Get Many',
 						value: 'getAll',
-						description: 'Get all projects',
-						action: 'Get all projects',
+						description: 'Get many projects',
+						action: 'Get many projects',
 					},
 					{
 						name: 'Update',

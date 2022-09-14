@@ -35,8 +35,8 @@ export const tagOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get data of all tags',
-				action: 'Get all tags',
+				description: 'Get data of many tags',
+				action: 'Get many tags',
 			},
 			{
 				name: 'Update',

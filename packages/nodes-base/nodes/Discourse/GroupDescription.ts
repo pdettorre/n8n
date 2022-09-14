@@ -29,8 +29,8 @@ export const groupOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all groups',
-				action: 'Get all groups',
+				description: 'Get many groups',
+				action: 'Get many groups',
 			},
 			{
 				name: 'Update',

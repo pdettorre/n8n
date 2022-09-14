@@ -33,8 +33,8 @@ export const clientOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all clients',
-				action: 'Get all clients',
+				description: 'Get many clients',
+				action: 'Get many clients',
 			},
 			{
 				name: 'Update',

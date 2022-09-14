@@ -27,8 +27,8 @@ export const subscriberOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all subscribers',
-				action: 'Get all subscribers',
+				description: 'Get many subscribers',
+				action: 'Get many subscribers',
 			},
 			{
 				name: 'Update',

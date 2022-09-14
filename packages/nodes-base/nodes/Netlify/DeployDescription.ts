@@ -33,8 +33,8 @@ export const deployOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all deployments',
-				action: 'Get all deployments',
+				description: 'Get many deployments',
+				action: 'Get many deployments',
 			},
 		],
 		default: 'getAll',

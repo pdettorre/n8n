@@ -24,8 +24,8 @@ export const boardMemberOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all members of a board',
-				action: 'Get all board members',
+				description: 'Get many members of a board',
+				action: 'Get many board members',
 			},
 			{
 				name: 'Invite',

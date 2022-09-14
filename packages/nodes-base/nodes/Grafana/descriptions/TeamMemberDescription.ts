@@ -21,8 +21,8 @@ export const teamMemberOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all team members',
-				action: 'Get all team members',
+				description: 'Retrieve many team members',
+				action: 'Get many team members',
 			},
 			{
 				name: 'Remove',

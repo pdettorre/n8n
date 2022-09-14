@@ -144,8 +144,8 @@ export class Freshdesk implements INodeType {
 					{
 						name: 'Get Many',
 						value: 'getAll',
-						description: 'Get all tickets',
-						action: 'Get all tickets',
+						description: 'Get many tickets',
+						action: 'Get many tickets',
 					},
 					{
 						name: 'Update',

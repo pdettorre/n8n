@@ -15,8 +15,8 @@ export const fieldOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all fields',
-				action: 'Get all fields',
+				description: 'Get many fields',
+				action: 'Get many fields',
 			},
 		],
 		default: 'getAll',

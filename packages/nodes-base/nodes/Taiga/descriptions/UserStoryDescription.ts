@@ -33,8 +33,8 @@ export const userStoryOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all user stories',
-				action: 'Get all user stories',
+				description: 'Get many user stories',
+				action: 'Get many user stories',
 			},
 			{
 				name: 'Update',

@@ -33,8 +33,8 @@ export const viewOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all views',
-				action: 'Get all views',
+				description: 'Get many views',
+				action: 'Get many views',
 			},
 			{
 				name: 'Get Rows',

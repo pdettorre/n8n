@@ -33,8 +33,8 @@ export const paymentOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get data of all payments',
-				action: 'Get all payments',
+				description: 'Get data of many payments',
+				action: 'Get many payments',
 			},
 		],
 		default: 'create',

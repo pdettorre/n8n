@@ -33,8 +33,8 @@ export const activityOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all companies',
-				action: 'Get all activities',
+				description: 'Get many companies',
+				action: 'Get many activities',
 			},
 			{
 				name: 'Update',

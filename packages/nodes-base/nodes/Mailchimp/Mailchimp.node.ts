@@ -158,8 +158,8 @@ export class Mailchimp implements INodeType {
 					{
 						name: 'Get Many',
 						value: 'getAll',
-						description: 'Get all members on list',
-						action: 'Get all members',
+						description: 'Get many members on a list',
+						action: 'Get many members',
 					},
 					{
 						name: 'Update',
@@ -212,8 +212,8 @@ export class Mailchimp implements INodeType {
 					{
 						name: 'Get Many',
 						value: 'getAll',
-						description: 'Get all groups',
-						action: 'Get all list groups',
+						description: 'Get many groups',
+						action: 'Get many list groups',
 					},
 				],
 				default: 'getAll',
@@ -245,8 +245,8 @@ export class Mailchimp implements INodeType {
 					{
 						name: 'Get Many',
 						value: 'getAll',
-						description: 'Get all the campaigns',
-						action: 'Get all campaigns',
+						description: 'Get many campaigns',
+						action: 'Get many campaigns',
 					},
 					{
 						name: 'Replicate',
@@ -2192,7 +2192,7 @@ export class Mailchimp implements INodeType {
 				returnData.push(...executionData);
 			} catch (error) {
 				if (this.continueOnFail()) {
-					returnData.push({json:{ error: error.message }});
+					returnData.push({ json: { error: error.message } });
 					continue;
 				}
 				throw error;

@@ -33,8 +33,8 @@ export const dashboardOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all dashboards',
-				action: 'Get all dashboards',
+				description: 'Get many dashboards',
+				action: 'Get many dashboards',
 			},
 			{
 				name: 'Update',

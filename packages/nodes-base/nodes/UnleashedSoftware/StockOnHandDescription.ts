@@ -21,8 +21,8 @@ export const stockOnHandOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all stocks on hand',
-				action: 'Get all stocks on hand',
+				description: 'Get many stocks on hand',
+				action: 'Get many stocks on hand',
 			},
 		],
 		default: 'getAll',

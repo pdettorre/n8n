@@ -34,8 +34,8 @@ export const databasePageOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all pages in a database',
-				action: 'Get all database pages',
+				description: 'Get many pages in a database',
+				action: 'Get many database pages',
 			},
 			{
 				name: 'Update',
@@ -67,8 +67,8 @@ export const databasePageOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all pages in a database',
-				action: 'Get all database pages',
+				description: 'Get many pages in a database',
+				action: 'Get many database pages',
 			},
 			{
 				name: 'Update',

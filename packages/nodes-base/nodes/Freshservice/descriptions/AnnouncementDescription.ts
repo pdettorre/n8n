@@ -33,8 +33,8 @@ export const announcementOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all announcements',
-				action: 'Get all announcements',
+				description: 'Retrieve many announcements',
+				action: 'Get many announcements',
 			},
 			{
 				name: 'Update',

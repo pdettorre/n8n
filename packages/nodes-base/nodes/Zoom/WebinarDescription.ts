@@ -33,8 +33,8 @@ export const webinarOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all webinars',
-				action: 'Get all webinars',
+				description: 'Retrieve many webinars',
+				action: 'Get many webinars',
 			},
 			{
 				name: 'Update',
@@ -177,6 +177,7 @@ export const webinarFields: INodeProperties[] = [
 				displayName: 'Password',
 				name: 'password',
 				type: 'string',
+				typeOptions: { password: true },
 				default: '',
 				description: 'Password to join the webinar with maximum 10 characters',
 			},
@@ -519,6 +520,7 @@ export const webinarFields: INodeProperties[] = [
 				displayName: 'Password',
 				name: 'password',
 				type: 'string',
+				typeOptions: { password: true },
 				default: '',
 				description: 'Password to join the webinar with maximum 10 characters',
 			},

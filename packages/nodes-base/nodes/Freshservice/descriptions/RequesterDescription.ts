@@ -34,8 +34,8 @@ export const requesterOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all requesters',
-				action: 'Get all requesters',
+				description: 'Retrieve many requesters',
+				action: 'Get many requesters',
 			},
 			{
 				name: 'Update',

@@ -21,8 +21,8 @@ export const timeEntryTagOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all time entry tags',
-				action: 'Get all time entry tags',
+				description: 'Get many time entry tags',
+				action: 'Get many time entry tags',
 			},
 			{
 				name: 'Remove',

@@ -46,8 +46,8 @@ export const opportunityOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all opportunities',
-				action: 'Get all opportunities',
+				description: 'Get many opportunities',
+				action: 'Get many opportunities',
 			},
 			{
 				name: 'Get Summary',

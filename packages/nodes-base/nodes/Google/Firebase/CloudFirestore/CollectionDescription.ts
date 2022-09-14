@@ -15,8 +15,8 @@ export const collectionOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all root collections',
-				action: 'Get all collections',
+				description: 'Get many root collections',
+				action: 'Get many collections',
 			},
 		],
 		default: 'getAll',

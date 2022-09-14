@@ -48,8 +48,8 @@ export const quoteOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all quotes',
-				action: 'Get all quotes',
+				description: 'Get many quotes',
+				action: 'Get many quotes',
 			},
 			{
 				name: 'Update',

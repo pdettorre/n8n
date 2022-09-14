@@ -33,8 +33,8 @@ export const folderOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all folders',
-				action: 'Get all folders',
+				description: 'Get many folders',
+				action: 'Get many folders',
 			},
 			{
 				name: 'Update',

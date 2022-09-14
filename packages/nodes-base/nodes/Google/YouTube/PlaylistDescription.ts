@@ -33,8 +33,8 @@ export const playlistOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all playlists',
-				action: 'Get all playlists',
+				description: 'Retrieve many playlists',
+				action: 'Get many playlists',
 			},
 			{
 				name: 'Update',

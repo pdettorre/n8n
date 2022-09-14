@@ -33,8 +33,8 @@ export const journalEntryOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Retrieve all journal entries',
-				action: 'Get all journal entries',
+				description: 'Retrieve many journal entries',
+				action: 'Get many journal entries',
 			},
 			{
 				name: 'Update',

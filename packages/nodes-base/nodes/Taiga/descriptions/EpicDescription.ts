@@ -33,8 +33,8 @@ export const epicOperations: INodeProperties[] = [
 			{
 				name: 'Get Many',
 				value: 'getAll',
-				description: 'Get all epics',
-				action: 'Get all epics',
+				description: 'Get many epics',
+				action: 'Get many epics',
 			},
 			{
 				name: 'Update',
