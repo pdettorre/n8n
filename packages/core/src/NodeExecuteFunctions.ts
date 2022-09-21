@@ -14,6 +14,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
 import {
 	GenericValue,
 	IAdditionalCredentialOptions,
@@ -479,12 +480,15 @@ async function parseRequestObject(requestObject: IDataObject) {
 		});
 	}
 
+	if (requestObject.simple === false) {
+		axiosConfig.validateStatus = () => true;
+	}
+
 	/**
 	 * Missing properties:
 	 * encoding (need testing)
 	 * gzip (ignored - default already works)
 	 * resolveWithFullResponse (implemented elsewhere)
-	 * simple (???)
 	 */
 
 	return axiosConfig;
@@ -781,6 +785,7 @@ async function httpRequest(
 	) {
 		delete axiosRequest.data;
 	}
+
 	const result = await axios(axiosRequest);
 	if (requestOptions.returnFullResponse) {
 		return {
