@@ -140,7 +140,6 @@ export const ALL_NODE_FILTER = 'All';
 export const UNCATEGORIZED_CATEGORY = 'Miscellaneous';
 export const UNCATEGORIZED_SUBCATEGORY = 'Helpers';
 export const PERSONALIZED_CATEGORY = 'Suggested Nodes';
-export const HIDDEN_NODES = [START_NODE_TYPE];
 
 export const REQUEST_NODE_FORM_URL = 'https://n8n-community.typeform.com/to/K1fBVTZ3';
 
@@ -269,6 +268,7 @@ export enum VIEWS {
 	EXECUTION = "ExecutionById",
 	TEMPLATE = "TemplatesWorkflowView",
 	TEMPLATES = "TemplatesSearchView",
+	CREDENTIALS = "CredentialsView",
 	NEW_WORKFLOW = "NodeViewNew",
 	WORKFLOW = "NodeViewExisting",
 	DEMO = "WorkflowDemo",
@@ -309,3 +309,11 @@ export const MAPPING_PARAMS = [`$evaluateExpression`, `$item`, `$jmespath`, `$no
 
 export const DEFAULT_STICKY_HEIGHT = 160;
 export const DEFAULT_STICKY_WIDTH = 240;
+
+/**
+ * Enterprise edition
+ */
+
+export enum EnterpriseEditionFeature {
+	Sharing = 'sharing',
+}
