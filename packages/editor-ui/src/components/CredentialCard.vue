@@ -86,7 +86,9 @@ export default mixins(
 		},
 	},
 	computed: {
-		...mapGetters('users', ['currentUser']),
+		currentUser (): IUser {
+			return this.$store.getters['users/currentUser'];
+		},
 		credentialType(): ICredentialType {
 			return this.$store.getters['credentials/getCredentialTypeByName'](this.data.type);
 		},
@@ -112,7 +114,7 @@ export default mixins(
 	},
 	methods: {
 		async onClick() {
-			this.$store.dispatch('ui/openExisitngCredential', { id: this.data.id});
+			this.$store.dispatch('ui/openExistingCredential', { id: this.data.id});
 		},
 		async onAction(action: string) {
 			if (action === CREDENTIAL_LIST_ITEM_ACTIONS.OPEN) {

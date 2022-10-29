@@ -1,9 +1,8 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
+import Vuex, {ActionContext} from 'vuex';
 
 import {
 	PLACEHOLDER_EMPTY_WORKFLOW_ID,
-	DEFAULT_NODETYPE_VERSION,
 } from '@/constants';
 
 import {
@@ -34,9 +33,11 @@ import {
 	XYPosition,
 	IRestApiContext,
 	IWorkflowsState,
+	IWorkflowsMap,
 } from './Interface';
 
 import nodeTypes from './modules/nodeTypes';
+import ndv from './modules/ndv';
 import credentials from './modules/credentials';
 import settings from './modules/settings';
 import tags from './modules/tags';
@@ -48,7 +49,10 @@ import templates from './modules/templates';
 import {stringSizeInBytes} from "@/components/helpers";
 import {dataPinningEventBus} from "@/event-bus/data-pinning-event-bus";
 import communityNodes from './modules/communityNodes';
+import nodeCreator from './modules/nodeCreator';
 import { isJsonKeyObject } from './utils';
+import {getActiveWorkflows, getWorkflows} from "@/api/workflows";
+import { getPairedItemsMapping } from './pairedItemUtils';
 
 Vue.use(Vuex);
 
@@ -56,10 +60,9 @@ const state: IRootState = {
 	activeExecutions: [],
 	activeWorkflows: [],
 	activeActions: [],
-	activeNode: null,
 	activeCredentialType: null,
 	// @ts-ignore
-	baseUrl: process.env.VUE_APP_URL_BASE_API ? process.env.VUE_APP_URL_BASE_API : (window.BASE_PATH === '/%BASE_PATH%/' ? '/' : window.BASE_PATH),
+	baseUrl: import.meta.env.VUE_APP_URL_BASE_API ?? window.BASE_PATH ?? '/',
 	defaultLocale: 'en',
 	endpointWebhook: 'webhook',
 	endpointWebhookTest: 'webhook-test',
@@ -78,6 +81,7 @@ const state: IRootState = {
 	oauthCallbackUrls: {},
 	n8nMetadata: {},
 	workflowExecutionData: null,
+	workflowExecutionPairedItemMappings: {},
 	lastSelectedNode: null,
 	lastSelectedNodeOutputIndex: null,
 	nodeViewOffsetPosition: [0, 0],
@@ -99,9 +103,11 @@ const state: IRootState = {
 		tags: [],
 		pinData: {},
 	},
+	workflowsById: {},
 	sidebarMenuItems: [],
 	instanceId: '',
 	nodeMetadata: {},
+	subworkflowExecutionError: null,
 };
 
 const modules = {
@@ -115,10 +121,12 @@ const modules = {
 	users,
 	ui,
 	communityNodes,
+	nodeCreator,
+	ndv,
 };
 
 export const store = new Vuex.Store({
-	strict: process.env.NODE_ENV !== 'production',
+	strict: import.meta.env.NODE_ENV !== 'production',
 	modules,
 	state,
 	mutations: {
@@ -171,8 +179,30 @@ export const store = new Vuex.Store({
 			Vue.set(activeExecution, 'finished', finishedActiveExecution.data.finished);
 			Vue.set(activeExecution, 'stoppedAt', finishedActiveExecution.data.stoppedAt);
 		},
+		setSubworkflowExecutionError(state, subworkflowExecutionError: Error | null) {
+			state.subworkflowExecutionError = subworkflowExecutionError;
+		},
 		setActiveExecutions(state, newActiveExecutions: IExecutionsCurrentSummaryExtended[]) {
 			Vue.set(state, 'activeExecutions', newActiveExecutions);
+		},
+
+		// Workflows
+		setWorkflows: (state: IRootState, workflows: IWorkflowDb[]) => {
+			state.workflowsById = workflows.reduce<IWorkflowsMap>((acc, workflow: IWorkflowDb) => {
+				if (workflow.id) {
+					acc[workflow.id] = workflow;
+				}
+
+				return acc;
+			}, {});
+		},
+		deleteWorkflow: (state: IRootState, id: string) => {
+			const { [id]: deletedWorkflow, ...workflows } = state.workflowsById;
+
+			state.workflowsById = workflows;
+		},
+		addWorkflow: (state: IRootState, workflow: IWorkflowDb) => {
+			Vue.set(state.workflowsById, workflow.id, workflow);
 		},
 
 		// Active Workflows
@@ -185,11 +215,19 @@ export const store = new Vuex.Store({
 			if (index === -1) {
 				state.activeWorkflows.push(workflowId);
 			}
+
+			if (state.workflowsById[workflowId]) {
+				Vue.set(state.workflowsById[workflowId], 'active', true);
+			}
 		},
 		setWorkflowInactive(state, workflowId: string) {
 			const index = state.activeWorkflows.indexOf(workflowId);
 			if (index !== -1) {
 				state.activeWorkflows.splice(index, 1);
+			}
+
+			if (state.workflowsById[workflowId]) {
+				Vue.set(state.workflowsById[workflowId], 'active', false);
 			}
 		},
 		// Set state condition dirty or not
@@ -363,7 +401,7 @@ export const store = new Vuex.Store({
 			state.stateIsDirty = true;
 			// If node has any WorkflowResultData rename also that one that the data
 			// does still get displayed also after node got renamed
-			if (state.workflowExecutionData !== null && state.workflowExecutionData.data.resultData.runData.hasOwnProperty(nameData.old)) {
+			if (state.workflowExecutionData !== null && state.workflowExecutionData.data && state.workflowExecutionData.data.resultData.runData.hasOwnProperty(nameData.old)) {
 				state.workflowExecutionData.data.resultData.runData[nameData.new] = state.workflowExecutionData.data.resultData.runData[nameData.old];
 				delete state.workflowExecutionData.data.resultData.runData[nameData.old];
 			}
@@ -380,6 +418,8 @@ export const store = new Vuex.Store({
 				Vue.set(state.workflow.pinData, nameData.new, state.workflow.pinData[nameData.old]);
 				Vue.delete(state.workflow.pinData, nameData.old);
 			}
+
+			state.workflowExecutionPairedItemMappings = getPairedItemsMapping(state.workflowExecutionData);
 		},
 
 		resetAllNodesIssues(state) {
@@ -422,7 +462,7 @@ export const store = new Vuex.Store({
 
 		// Id
 		setWorkflowId (state, id: string) {
-			state.workflow.id = id;
+			state.workflow.id = id === 'new' ? PLACEHOLDER_EMPTY_WORKFLOW_ID : id;
 		},
 
 		// Name
@@ -617,13 +657,9 @@ export const store = new Vuex.Store({
 		setIsNpmAvailable(state, isNpmAvailable: boolean) {
 			Vue.set(state, 'isNpmAvailable', isNpmAvailable);
 		},
-		setActiveNode(state, nodeName: string) {
-			state.activeNode = nodeName;
-		},
 		setActiveCredentialType(state, activeCredentialType: string) {
 			state.activeCredentialType = activeCredentialType;
 		},
-
 		setLastSelectedNode(state, nodeName: string) {
 			state.lastSelectedNode = nodeName;
 		},
@@ -634,18 +670,20 @@ export const store = new Vuex.Store({
 
 		setWorkflowExecutionData(state, workflowResultData: IExecutionResponse | null) {
 			state.workflowExecutionData = workflowResultData;
+			state.workflowExecutionPairedItemMappings = getPairedItemsMapping(state.workflowExecutionData);
 		},
 		addNodeExecutionData(state, pushData: IPushDataNodeExecuteAfter): void {
-			if (state.workflowExecutionData === null) {
+			if (state.workflowExecutionData === null || !state.workflowExecutionData.data) {
 				throw new Error('The "workflowExecutionData" is not initialized!');
 			}
 			if (state.workflowExecutionData.data.resultData.runData[pushData.nodeName] === undefined) {
 				Vue.set(state.workflowExecutionData.data.resultData.runData, pushData.nodeName, []);
 			}
 			state.workflowExecutionData.data.resultData.runData[pushData.nodeName].push(pushData.data);
+			state.workflowExecutionPairedItemMappings = getPairedItemsMapping(state.workflowExecutionData);
 		},
 		clearNodeExecutionData(state, nodeName: string): void {
-			if (state.workflowExecutionData === null) {
+			if (state.workflowExecutionData === null || !state.workflowExecutionData.data) {
 				return;
 			}
 
@@ -710,11 +748,18 @@ export const store = new Vuex.Store({
 		},
 	},
 	getters: {
+		workflowExecutionPairedItemMappings: (state): IRootState['workflowExecutionPairedItemMappings'] => {
+			return state.workflowExecutionPairedItemMappings;
+		},
 		executedNode: (state): string | undefined => {
 			return state.workflowExecutionData ? state.workflowExecutionData.executedNode : undefined;
 		},
 		activeCredentialType: (state): string | null => {
 			return state.activeCredentialType;
+		},
+
+		subworkflowExecutionError: (state): Error | null => {
+			return state.subworkflowExecutionError;
 		},
 
 		isActionActive: (state) => (action: string): boolean => {
@@ -742,15 +787,15 @@ export const store = new Vuex.Store({
 		},
 		getRestUrl: (state): string => {
 			let endpoint = 'rest';
-			if (process.env.VUE_APP_ENDPOINT_REST) {
-				endpoint = process.env.VUE_APP_ENDPOINT_REST;
+			if (import.meta.env.VUE_APP_ENDPOINT_REST) {
+				endpoint = import.meta.env.VUE_APP_ENDPOINT_REST;
 			}
 			return `${state.baseUrl}${endpoint}`;
 		},
 		getRestApiContext(state): IRestApiContext {
 			let endpoint = 'rest';
-			if (process.env.VUE_APP_ENDPOINT_REST) {
-				endpoint = process.env.VUE_APP_ENDPOINT_REST;
+			if (import.meta.env.VUE_APP_ENDPOINT_REST) {
+				endpoint = import.meta.env.VUE_APP_ENDPOINT_REST;
 			}
 			return {
 				baseUrl: `${state.baseUrl}${endpoint}`,
@@ -812,6 +857,12 @@ export const store = new Vuex.Store({
 		},
 		sessionId: (state): string => {
 			return state.sessionId;
+		},
+
+		// Workflows
+		allWorkflows(state: IRootState): IWorkflowDb[] {
+			return Object.values(state.workflowsById)
+				.sort((a, b) => a.name.localeCompare(b.name));
 		},
 
 		// Active Workflows
@@ -895,7 +946,6 @@ export const store = new Vuex.Store({
 		/**
 		 * Pin data
 		 */
-
 		pinData: (state): IPinData | undefined => {
 			return state.workflow.pinData;
 		},
@@ -904,15 +954,21 @@ export const store = new Vuex.Store({
 
 			return state.workflow.pinData[nodeName].map(item => item.json);
 		},
-		pinDataSize: (state) => {
+		pinDataSize: (state, getters, rootState, rootGetters) => {
+			const activeNode = rootGetters['ndv/activeNodeName'];
 			return state.workflow.nodes
 				.reduce((acc, node) => {
-					if (typeof node.pinData !== 'undefined' && node.name !== state.activeNode) {
+					if (typeof node.pinData !== 'undefined' && node.name !== activeNode) {
 						acc += stringSizeInBytes(node.pinData);
 					}
 
 					return acc;
 				}, 0);
+		},
+
+		activeNode: (state, getters, rootState, rootGetters): INodeUi | null => {
+			// kept here for FE hooks
+			return rootGetters['ndv/activeNode'];
 		},
 
 		/**
@@ -927,9 +983,6 @@ export const store = new Vuex.Store({
 				if (/\d$/.test(cur.defaults.name)) acc.push(cur.defaults.name);
 				return acc;
 			}, []);
-		},
-		activeNode: (state, getters): INodeUi | null => {
-			return getters.getNodeByName(state.activeNode);
 		},
 		lastSelectedNode: (state, getters): INodeUi | null => {
 			return getters.getNodeByName(state.lastSelectedNode);
@@ -992,6 +1045,20 @@ export const store = new Vuex.Store({
 
 		sidebarMenuItems: (state): IMenuItem[] => {
 			return state.sidebarMenuItems;
+		},
+	},
+	actions: {
+		fetchAllWorkflows: async (context: ActionContext<IWorkflowsState, IRootState>): Promise<IWorkflowDb[]> => {
+			const workflows = await getWorkflows(context.rootGetters.getRestApiContext);
+			context.commit('setWorkflows', workflows);
+
+			return workflows;
+		},
+		fetchActiveWorkflows: async (context: ActionContext<IWorkflowsState, IRootState>): Promise<string[]> => {
+			const activeWorkflows = await getActiveWorkflows(context.rootGetters.getRestApiContext);
+			context.commit('setActiveWorkflows', activeWorkflows);
+
+			return activeWorkflows;
 		},
 	},
 });
