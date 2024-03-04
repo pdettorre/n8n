@@ -1,30 +1,29 @@
-import {
+import type {
 	DeclarativeRestApiSettings,
 	IDataObject,
 	IExecuteFunctions,
 	IExecutePaginationFunctions,
 	IExecuteSingleFunctions,
 	IHookFunctions,
+	IHttpRequestMethods,
 	IHttpRequestOptions,
 	ILoadOptionsFunctions,
 	INodeExecutionData,
+	IRequestOptions,
 	JsonObject,
-	NodeApiError,
-	NodeOperationError,
 	PreSendAction,
 } from 'n8n-workflow';
-import { OptionsWithUri } from 'request';
+import { NodeApiError, NodeOperationError } from 'n8n-workflow';
 
 /**
  * A custom API request function to be used with the resourceLocator lookup queries.
  */
 export async function apiRequest(
 	this: IHookFunctions | IExecuteFunctions | ILoadOptionsFunctions,
-	method: string,
+	method: IHttpRequestMethods,
 	endpoint: string,
 	body: object,
 	query?: IDataObject,
-	// tslint:disable-next-line:no-any
 ): Promise<any> {
 	query = query || {};
 
@@ -36,7 +35,7 @@ export async function apiRequest(
 	const credentials = (await this.getCredentials('n8nApi')) as N8nApiCredentials;
 	const baseUrl = credentials.baseUrl;
 
-	const options: OptionsWithUri = {
+	const options: IRequestOptions = {
 		method,
 		body,
 		qs: query,
@@ -56,11 +55,10 @@ export async function apiRequest(
 
 export async function apiRequestAllItems(
 	this: IHookFunctions | IExecuteFunctions | ILoadOptionsFunctions,
-	method: string,
+	method: IHttpRequestMethods,
 	endpoint: string,
 	body: object,
 	query?: IDataObject,
-	// tslint:disable-next-line:no-any
 ): Promise<any> {
 	query = query || {};
 	const returnData: IDataObject[] = [];
@@ -72,7 +70,7 @@ export async function apiRequestAllItems(
 		query.cursor = nextCursor;
 		query.limit = 100;
 		responseData = await apiRequest.call(this, method, endpoint, body, query);
-		returnData.push.apply(returnData, responseData.data);
+		returnData.push.apply(returnData, responseData.data as IDataObject[]);
 		nextCursor = responseData.nextCursor as string | undefined;
 	} while (nextCursor);
 	return returnData;
@@ -106,6 +104,14 @@ export const getCursorPaginator = () => {
 		let nextCursor: string | undefined = undefined;
 		const returnAll = this.getNodeParameter('returnAll', true) as boolean;
 
+		const extractItems = (page: INodeExecutionData) => {
+			const items = page.json.data as IDataObject[];
+			if (items) {
+				// Extract the items themselves
+				executions = executions.concat(items.map((item) => ({ json: item })));
+			}
+		};
+
 		do {
 			requestOptions.options.qs.cursor = nextCursor;
 			responseData = await this.makeRoutingRequest(requestOptions);
@@ -114,13 +120,7 @@ export const getCursorPaginator = () => {
 			const lastItem = responseData[responseData.length - 1].json;
 			nextCursor = lastItem.nextCursor as string | undefined;
 
-			responseData.forEach((page) => {
-				const items = page.json.data as IDataObject[];
-				if (items) {
-					// Extract the items themselves
-					executions = executions.concat(items.map((item) => ({ json: item })));
-				}
-			});
+			responseData.forEach(extractItems);
 
 			// If we don't return all, just return the first page
 		} while (returnAll && nextCursor);
@@ -166,7 +166,9 @@ export const parseAndSetBodyJson = (
 		} catch (err) {
 			throw new NodeOperationError(
 				this.getNode(),
-				`The '${parameterName}' property must be valid JSON, but cannot be parsed: ${err}`,
+				new Error(`The '${parameterName}' property must be valid JSON, but cannot be parsed`, {
+					cause: err,
+				}),
 			);
 		}
 		return requestOptions;

@@ -1,8 +1,10 @@
-import { IExecuteFunctions, IHookFunctions } from 'n8n-core';
-
-import { IDataObject, NodeApiError, NodeOperationError } from 'n8n-workflow';
-
-import { OptionsWithUri } from 'request';
+import type {
+	IExecuteFunctions,
+	IHookFunctions,
+	IDataObject,
+	IHttpRequestMethods,
+	IRequestOptions,
+} from 'n8n-workflow';
 
 /**
  * Make an API request to Twilio
@@ -10,11 +12,10 @@ import { OptionsWithUri } from 'request';
  */
 export async function twilioApiRequest(
 	this: IHookFunctions | IExecuteFunctions,
-	method: string,
+	method: IHttpRequestMethods,
 	endpoint: string,
 	body: IDataObject,
 	query?: IDataObject,
-	// tslint:disable-next-line:no-any
 ): Promise<any> {
 	const credentials = (await this.getCredentials('twilioApi')) as {
 		accountSid: string;
@@ -28,7 +29,7 @@ export async function twilioApiRequest(
 		query = {};
 	}
 
-	const options: OptionsWithUri = {
+	const options: IRequestOptions = {
 		method,
 		form: body,
 		qs: query,
@@ -36,11 +37,7 @@ export async function twilioApiRequest(
 		json: true,
 	};
 
-	try {
-		return await this.helpers.requestWithAuthentication.call(this, 'twilioApi', options);
-	} catch (error) {
-		throw new NodeApiError(this.getNode(), error);
-	}
+	return await this.helpers.requestWithAuthentication.call(this, 'twilioApi', options);
 }
 
 const XML_CHAR_MAP: { [key: string]: string } = {

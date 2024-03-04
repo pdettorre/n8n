@@ -1,30 +1,30 @@
 <template>
-	<div :class="classes" v-on="$listeners">
-		<div :class="$style.icon" v-if="$slots.prepend">
-			<slot name="prepend"/>
+	<div :class="classes" v-bind="$attrs">
+		<div v-if="$slots.prepend" :class="$style.icon">
+			<slot name="prepend" />
 		</div>
 		<div :class="$style.content">
-			<div :class="$style.header" v-if="$slots.header">
-				<slot name="header"/>
+			<div v-if="$slots.header" :class="$style.header">
+				<slot name="header" />
 			</div>
-			<div :class="$style.body" v-if="$slots.default">
-				<slot/>
+			<div v-if="$slots.default" :class="$style.body">
+				<slot />
 			</div>
-			<div :class="$style.footer" v-if="$slots.footer">
-				<slot name="footer"/>
+			<div v-if="$slots.footer" :class="$style.footer">
+				<slot name="footer" />
 			</div>
 		</div>
-		<div :class="$style.actions" v-if="$slots.append">
-			<slot name="append"/>
+		<div v-if="$slots.append" :class="$style.append">
+			<slot name="append" />
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
-	name: 'n8n-card',
+export default defineComponent({
+	name: 'N8nCard',
 	inheritAttrs: true,
 	props: {
 		hoverable: {
@@ -82,7 +82,6 @@ export default Vue.extend({
 
 .icon {
 	width: 24px;
-	height: 24px;
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
@@ -90,15 +89,21 @@ export default Vue.extend({
 }
 
 .hoverable {
-  cursor: pointer;
-  transition-property: border, color;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
+	cursor: pointer;
+	transition-property: border, color;
+	transition-duration: 0.3s;
+	transition-timing-function: ease;
 
-  &:hover,
-  &:focus {
-	color: var(--color-primary);
-	border-color: var(--color-primary);
-  }
+	&:hover,
+	&:focus {
+		color: var(--color-primary);
+		border-color: var(--color-primary);
+	}
+}
+
+.append {
+	display: flex;
+	align-items: center;
+	cursor: default;
 }
 </style>

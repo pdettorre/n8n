@@ -1,15 +1,15 @@
-import { OptionsWithUri } from 'request';
-
-import {
+import type {
+	IDataObject,
 	IExecuteFunctions,
-	IExecuteSingleFunctions,
 	IHookFunctions,
 	ILoadOptionsFunctions,
-} from 'n8n-core';
+	JsonObject,
+	IRequestOptions,
+	IHttpRequestMethods,
+} from 'n8n-workflow';
+import { NodeApiError, NodeOperationError } from 'n8n-workflow';
 
-import { IDataObject, JsonObject, NodeApiError, NodeOperationError } from 'n8n-workflow';
-
-import { get } from 'lodash';
+import get from 'lodash/get';
 
 export const eventID: { [key: string]: string } = {
 	create_client: '1',
@@ -20,8 +20,8 @@ export const eventID: { [key: string]: string } = {
 };
 
 export async function invoiceNinjaApiRequest(
-	this: IHookFunctions | IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions,
-	method: string,
+	this: IHookFunctions | IExecuteFunctions | ILoadOptionsFunctions,
+	method: IHttpRequestMethods,
 	endpoint: string,
 	body: IDataObject = {},
 	query?: IDataObject,
@@ -36,9 +36,9 @@ export async function invoiceNinjaApiRequest(
 	const version = this.getNodeParameter('apiVersion', 0) as string;
 
 	const defaultUrl = version === 'v4' ? 'https://app.invoiceninja.com' : 'https://invoicing.co';
-	const baseUrl = credentials!.url || defaultUrl;
+	const baseUrl = credentials.url || defaultUrl;
 
-	const options: OptionsWithUri = {
+	const options: IRequestOptions = {
 		method,
 		qs: query,
 		uri: uri || `${baseUrl}/api/v1${endpoint}`,
@@ -56,7 +56,7 @@ export async function invoiceNinjaApiRequest(
 export async function invoiceNinjaApiRequestAllItems(
 	this: IExecuteFunctions | ILoadOptionsFunctions | IHookFunctions,
 	propertyName: string,
-	method: string,
+	method: IHttpRequestMethods,
 	endpoint: string,
 	body: IDataObject = {},
 	query: IDataObject = {},
@@ -73,13 +73,8 @@ export async function invoiceNinjaApiRequestAllItems(
 		if (next) {
 			uri = next;
 		}
-		returnData.push.apply(returnData, responseData[propertyName]);
-	} while (
-		responseData.meta !== undefined &&
-		responseData.meta.pagination &&
-		responseData.meta.pagination.links &&
-		responseData.meta.pagination.links.next
-	);
+		returnData.push.apply(returnData, responseData[propertyName] as IDataObject[]);
+	} while (responseData.meta?.pagination?.links?.next);
 
 	return returnData;
 }
